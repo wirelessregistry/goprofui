@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <style>
+  body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  .graph .chart {
+    width: 950px;
+  }
+  .graph .axis {
+    stroke-width: 1;
+  }
+
+  .graph .axis .tick line {
+    stroke: black;
+  }
+
+  .graph .axis .tick text {
+    fill: black;
+    font-size: 0.7em;
+  }
+
+  .graph .axis .domain {
+    fill: none;
+    stroke: black;
+  }
+
+  .graph .group {
+    fill: none;
+    stroke: black;
+    stroke-width: 1.5;
+  }
+
+ .glyphicon-spin {
+    -webkit-animation: spin 1000ms infinite linear;
+    animation: spin 1000ms infinite linear;
+  }
+
+  @-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+@keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+  </style>
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="d3.flameGraph.css">
+</head>
+<body role="document">
+  <div class="container" role="main">
+    <div class="row">
+      <div class="col-md-4">
+        <button data-bind="text: profilingStatus, click: setupProfiling" class="btn btn-primary"></button>
+        <i data-bind="visible: working" class="glyphicon glyphicon-refresh glyphicon-spin"></i>
+      </div>
+    </div>
+    <div class="row">
+      <div data-bind="linechart: memoryData, groups: memoryGroups, bucket: memoryBucket" class="graph"></div>
+    </div>
+    <div class="row">
+      <div data-bind="linechart: goRoutineData, groups: goRoutineGroups, bucket: goRoutineBucket, title: 'Go Routines'" class="graph"></div>
+    </div>
+    <div class="row">
+      <div data-bind="linechart: gcData, groups: gcGroups, bucket: gcBucket, title: 'GC Pause'" class="graph"></div>
+    </div>
+    <div class="row">
+      <div data-bind="flame: flameData"></div>
+    </div>
+  </div>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
+  <script type="text/javascript" src="d3.flameGraph.js"></script>
+  <script type="text/javascript" src="ko.flame.js"></script>
+  <script type="text/javascript" src="ko.linechart.js"></script>
+  <script>
+
+  var ViewModel = function() {
+    var self = this;
+    this.goRoutineBucket = {};
+    this.goRoutineGroups = {
+        'go': {
+          key: 'Go Routines',
+          value: 0,
+          color: 'blue',
+          data: d3.range(60).map(function() {
+            return 0
+          })
+        }
+      }
+    this.goRoutineData = ko.observable({'go': 0})
+
+    this.gcBucket = {};
+    this.gcGroups = {
+        'gc': {
+          key: 'GC Pause',
+          value: 0,
+          color: 'blue',
+          data: d3.range(60).map(function() {
+            return 0
+          })
+        }
+      }
+    this.gcData = ko.observable({'gc': 0})
+
+    this.memoryBucket = {};
+    this.memoryGroups = {
+      'system': {
+        key: 'Requested',
+        value: 0,
+        color: 'blue',
+        data: d3.range(60).map(function() {
+          return 0
+        })
+      },
+      'allocated': {
+        key: 'In Use',
+        value: 0,
+        color: 'red',
+        data: d3.range(60).map(function() {
+          return 0
+        })
+      },
+      'idle': {
+        key: 'Idle',
+        value: 0,
+        color: 'grey',
+        data: d3.range(60).map(function() {
+          return 0
+        })
+      },
+      'released': {
+        key: 'Released',
+        value: 0,
+        color: 'green',
+        data: d3.range(60).map(function() {
+          return 0
+        })
+      }
+    };
+    this.memoryData = ko.observable({
+      'system': 0,
+      'allocated': 0,
+      'idle': 0,
+      'released': 0
+    });
+
+    this.flameData = ko.observableArray([]);
+    this.profiling = ko.observable(false);
+    this.working = ko.observable(false);
+    this.profilingStatus = ko.pureComputed(function() {
+      return this.profiling() ? 'Stop Profiling': 'Start Profiling';
+    }, this);
+
+    wsConnect("ws://localhost:6060/goroutines", function(e) {
+      var splitData = e.data.split(',');
+      var obj = {
+        'go': parseInt(splitData[0])
+      }
+
+      self.goRoutineData(obj);
+    });
+
+    wsConnect("ws://localhost:6060/gc", function(e) {
+      var splitData = e.data.split(',');
+      var obj = {
+        'gc': parseInt(splitData[0])
+      }
+
+      self.gcData(obj);
+    });
+
+    wsConnect("ws://localhost:6060/memory", function(e) {
+      var splitData = e.data.split(',');
+      var obj = {
+        'system': splitData[0],
+        'allocated': splitData[1],
+        'idle': splitData[2],
+        'released': splitData[3]
+      }
+
+      self.memoryData(obj);
+    });
+
+    this.handleResponse = function(req) {
+      return function(e) {
+        if (req.readyState === XMLHttpRequest.DONE) {
+          self.working(false);
+          if (self.profiling()===true) {
+            self.flameData(JSON.parse(req.responseText));
+          }
+          self.profiling(!self.profiling());
+        }
+      }
+    }
+
+    this.setupProfiling = function() {
+      var req = new XMLHttpRequest();
+      self.working(true);
+      req.onreadystatechange = this.handleResponse(req);
+
+      if (this.profiling() === false) {
+        req.open('GET', '//localhost:6060/cpuprofile/start');
+      } else {
+        req.open('GET', '//localhost:6060/cpuprofile/stop');
+      }
+
+      req.send(null);
+
+    }
+  };
+
+  ko.applyBindings(new ViewModel());
+
+  function wsConnect(url, fn) {
+    var ws = null;
+    if (WebSocket === undefined) {
+      alert('You will need WebSockets to run this example');
+    } else {
+      ws = new WebSocket(url);
+      ws.onopen = function (e) {
+        console.log('Connected to server');
+      };
+
+      ws.onmessage = fn;
+    }
+  }
+
+  </script>
+</body>
+</html>
