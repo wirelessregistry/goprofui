@@ -8,7 +8,7 @@ import (
 	"runtime/pprof"
 	"time"
 
-	"github.com/code.wirelessregistry.com/goprofui/internal/profile"
+	"github.com/wirelessregistry/goprofui/internal/profile"
 )
 
 var ErrProfileFailed = errors.New("Could not start profiler")

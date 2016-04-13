@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/code.wirelessregistry.com/goprofui/internal/profile"
+	"github.com/wirelessregistry/goprofui/internal/profile"
 )
 
 func getCaller() uintptr {

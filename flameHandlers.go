@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"runtime/pprof"
 
-	"github.com/code.wirelessregistry.com/goprofui/internal/profile"
+	"github.com/wirelessregistry/goprofui/internal/profile"
 )
 
 var cpuProfileBuffer bytes.Buffer // the lock is in pprof
