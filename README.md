@@ -8,7 +8,7 @@ Key features:
  * Memory, GC pauses and goroutines line charts.
 
 
-### Related Packages
+### Related Work
  * go-torch. _https://github.com/uber/go-torch_. go-torch does cpu profiling and represents it as a flame graph.
 We were directly inspired by this package. In contrast to goprofui, go-torch requires the go pprof tool and an external Perl script.
 
