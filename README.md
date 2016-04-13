@@ -8,12 +8,11 @@ Key features:
  * Memory, GC pauses and goroutines line charts.
 
 
-### Related Work
- * go-torch. _https://github.com/uber/go-torch_. It does cpu profiling and represents it as a flame graph.
-We were directly inspired by this package. In contrast to goprofui, it requires the go tool and an external Perl script.
+### Related Packages
+ * go-torch. _https://github.com/uber/go-torch_. go-torch does cpu profiling and represents it as a flame graph.
+We were directly inspired by this package. In contrast to goprofui, go-torch requires the go pprof tool and an external Perl script.
 
- * profile. _https://github.com/pkg/profile_. It does cpu and mem profiling and saves them into a file. Easy setup and use.
-The cpu profiles would have to be further parsed for a flame graph.
+ * profile. _https://github.com/pkg/profile_. profile does cpu and memory profiling, and saves them into a file. It is easy to setup and use. However, the cpu profiles would have to be further parsed for a flame graph.
 
  * flame graphs. _http://www.brendangregg.com/flamegraphs.html_. Created by Brendan Gregg. An extremely succinct way to summarize stack traces. 
 
@@ -31,7 +30,7 @@ go get github.com/wirelessregistry/goprofui
 
 3. The line chart JS library is D3's.
 
-4. Goprofui's internal package is forked from pprof's internal package. It is covered by the BSD-license in
+4. goprofui's internal package is forked from pprof's internal package. It is covered by the BSD-license in
 LICENSE_internal_pkg.
 
 

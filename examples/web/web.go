@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/code.wirelessregistry.com/goprofui"
+	"github.com/wirelessregistry/goprofui"
 	"golang.org/x/net/websocket"
 	"log"
 	"net/http"
