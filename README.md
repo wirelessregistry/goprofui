@@ -8,13 +8,14 @@ Key features:
  * Memory, GC pauses and goroutines line charts.
 
 
-### Related Packages
+### Related Work
  * go-torch. _https://github.com/uber/go-torch_. It does cpu profiling and represents it as a flame graph.
 We were directly inspired by this package. In contrast to goprofui, it requires the go tool and an external Perl script.
 
  * profile. _https://github.com/pkg/profile_. It does cpu and mem profiling and saves them into a file. Easy setup and use.
 The cpu profiles would have to be further parsed for a flame graph.
 
+ * flame graphs. _http://www.brendangregg.com/flamegraphs.html_. Created by Brendan Gregg. An extremely succinct way to summarize stack traces. 
 
 ### Installation
 
