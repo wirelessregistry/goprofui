@@ -1,0 +1,39 @@
+<div class="row">
+  <h3>Memory</h3>
+  <div class="col-sm-3">
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Max</th>
+          <th>Min</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>Requested</th>
+          <td data-bind="text: memHistory().system.max"></td>
+          <td data-bind="text: memHistory().system.min"></td>
+        </tr>
+        <tr>
+          <th>In Use</th>
+          <td data-bind="text: memHistory().allocated.max"></td>
+          <td data-bind="text: memHistory().allocated.min"></td>
+        </tr>
+        <tr>
+          <th>Idle</th>
+          <td data-bind="text: memHistory().idle.max"></td>
+          <td data-bind="text: memHistory().idle.min"></td>
+        </tr>
+        <tr>
+          <th>Released</th>
+          <td data-bind="text: memHistory().released.max"></td>
+          <td data-bind="text: memHistory().released.min"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-sm-9" data-bind="if: showCharts()">
+    <div data-bind="linechart: memoryData, width: '600', height: '200', groups: memoryGroups, bucket: memoryBucket" class="graph"></div>
+  </div>
+</div>
