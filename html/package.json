@@ -1,0 +1,33 @@
+{
+  "name": "goprofui",
+  "version": "0.0.1",
+  "description": "UI for the goprofui go profiling/monitoring tool",
+  "main": "app/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "system": {
+    "npmAlgorithm": "flat",
+    "transpiler": "babel"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wirelessregistry/goprofui.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wirelessregistry/goprofui/issues"
+  },
+  "homepage": "https://github.com/wirelessregistry/goprofui#readme",
+  "dependencies": {
+    "bootbox": "^4.4.0",
+    "bootstrap": "^3.3.6",
+    "d3": "^3.5.17",
+    "jquery": "^2.2.4",
+    "knockout": "^3.4.0",
+    "steal": "^0.16.21",
+    "steal-tools": "^0.16.4",
+    "system-text": "^0.1.0"
+  }
+}

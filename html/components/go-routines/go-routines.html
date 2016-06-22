@@ -1,0 +1,21 @@
+<div class="row">
+  <h3>Go Routines</h3>
+  <div class="col-sm-3">
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th>Max: <span data-bind="text: goHistory().max"/></th>
+          <th>Min: <span data-bind="text: goHistory().min"/></th>
+        </tr>
+      </thead>
+      <tbody data-bind="foreach: goHistory().store">
+        <tr>
+          <td colspan="2" data-bind="text: $data"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-sm-9" data-bind="if: showCharts()">
+    <div data-bind="linechart: goRoutineData, width: '600', height: '200', groups: goRoutineGroups, bucket: goRoutineBucket, title: 'Go Routines'" class="graph"></div>
+  </div>
+</div>

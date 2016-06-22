@@ -1,0 +1,28 @@
+<div class="row">
+  <h3>
+    GC Pause
+    <small>
+      Max: <span data-bind="text: gcHistory().max"/>μs
+      Min: <span data-bind="text: gcHistory().min"/>μs
+    </small>
+  </h3>
+  <div class="col-sm-3">
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th>Pause</th>
+          <th>Time Elapsed</th>
+        </tr>
+      </thead>
+      <tbody data-bind="foreach: gcHistory().store">
+        <tr>
+          <td data-bind="text: $data + 'μs'"></td>
+          <td data-bind="text: $component.gcTimeHistory().store[$index()] + 'ms'"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-sm-9" data-bind="if: showCharts()">
+    <div data-bind="linechart: gcData, width: '600', height: '200', groups: gcGroups, bucket: gcBucket, title: 'GC Pause'" class="graph"></div>
+  </div>
+</div>
