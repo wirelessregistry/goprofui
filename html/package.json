@@ -24,7 +24,7 @@
     "bootbox": "^4.4.0",
     "bootstrap": "^3.3.6",
     "d3": "^3.5.17",
-    "jquery": "^2.2.4",
+    "jquery": "^3.5.0",
     "knockout": "^3.4.0",
     "steal": "^0.16.21",
     "steal-tools": "^0.16.4",
